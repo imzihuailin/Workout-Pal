@@ -10,11 +10,11 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan }) {
   const [rpe, setRpe] = useState('')
   const [editingExerciseId, setEditingExerciseId] = useState(null)
 
-  // 当plan变化时更新planName和originalPlanName
+  // 当plan变化时更新planName和originalPlanName（仅在切换不同计划时重置）
   useEffect(() => {
     setPlanName(plan.name)
     setOriginalPlanName(plan.name)
-  }, [plan.name])
+  }, [plan.id])
 
   // 处理计划名称变更（保留自动保存功能）
   const handlePlanNameChange = (e) => {
