@@ -83,9 +83,7 @@ npm run build
    vercel --prod
    ```
 
-**部署配置：**
-
-项目包含 `vercel.json` 配置文件，已配置：
+**部署配置：**项目包含 `vercel.json` 配置文件，已配置：
 - 构建命令：`npm run build`
 - 输出目录：`dist`
 - 框架：Vite
