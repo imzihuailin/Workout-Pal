@@ -8,12 +8,15 @@ src="https://github.com/user-attachments/assets/9be06974-4821-4b06-905e-e15c1b28
 
 ## 🌐 在线访问
 
-**立即使用**: [https://project-eight-eosin-69.vercel.app](https://project-eight-eosin-69.vercel.app)
+**立即使用**: [https://你的用户名.github.io/Workout-Pal](https://你的用户名.github.io/Workout-Pal)
+
+> 注意：请将链接中的"你的用户名"替换为你的 GitHub 用户名
 
 - ✅ 无需注册，打开即用
 - ✅ 支持移动端访问
 - ✅ 数据本地存储，保护隐私
 - ✅ 界面简洁，操作直观
+- ✅ 国内可访问（GitHub Pages）
 
 ## ✨ 功能特性
 
@@ -66,27 +69,25 @@ npm run build
 
 ### 部署
 
-本项目已部署到 Vercel 平台。
+本项目已配置为使用 GitHub Pages 自动部署。
 
 **部署步骤：**
 
-1. 安装 Vercel CLI：
-   ```bash
-   npm install -g vercel
-   ```
+1. **启用 GitHub Pages**
+   - 在 GitHub 仓库中，进入 `Settings` → `Pages`
+   - 在 `Source` 部分，选择 `GitHub Actions` 作为部署源
 
-2. 登录 Vercel：
-   ```bash
-   vercel login
-   ```
+2. **推送代码**
+   - 将代码推送到 `master` 分支
+   - GitHub Actions 会自动构建并部署到 GitHub Pages
 
-3. 部署到生产环境：
-   ```bash
-   vercel --prod
-   ```
+3. **访问网站**
+   - 部署完成后，访问：`https://你的用户名.github.io/Workout-Pal`
+   - 首次部署可能需要几分钟时间
 
-**部署配置：**项目包含 `vercel.json` 配置文件，已配置：
+**部署配置：**
 - 构建命令：`npm run build`
 - 输出目录：`dist`
-- 框架：Vite
-- SPA 路由重写规则
+- 基础路径：`/Workout-Pal/`
+- 自动部署：推送到 `master` 分支时自动触发
+- 工作流文件：`.github/workflows/deploy.yml`
