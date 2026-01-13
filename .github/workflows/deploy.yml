@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -36,7 +36,13 @@ jobs:
       - name: Setup 404.html for SPA routing
         run: |
           # 将构建后的 index.html 复制为 404.html（GitHub Pages 需要）
-          cp dist/index.html dist/404.html
+          if [ -f dist/index.html ]; then
+            cp dist/index.html dist/404.html
+            echo "404.html created successfully"
+          else
+            echo "Error: dist/index.html not found"
+            exit 1
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
