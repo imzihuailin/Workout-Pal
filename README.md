@@ -8,7 +8,7 @@ src="https://github.com/user-attachments/assets/9be06974-4821-4b06-905e-e15c1b28
 
 ## 🌐 在线访问
 
-**立即使用**: [https://你的用户名.github.io/Workout-Pal](https://你的用户名.github.io/Workout-Pal)
+**立即使用**: [https://imzihuailin.github.io/Workout-Pal](https://你的用户名.github.io/Workout-Pal)
 
 > 注意：请将链接中的"你的用户名"替换为你的 GitHub 用户名
 
