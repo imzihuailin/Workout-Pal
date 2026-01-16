@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages and Aliyun OSS
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
 
       - name: Setup 404.html for SPA routing
         run: |
-          # 将构建后的 index.html 复制为 404.html（GitHub Pages 需要）
+          # 将构建后的 index.html 复制为 404.html（GitHub Pages 和 OSS 都需要）
           if [ -f dist/index.html ]; then
             cp dist/index.html dist/404.html
             echo "404.html created successfully"
@@ -52,7 +52,7 @@ jobs:
         with:
           path: './dist'
 
-  deploy:
+  deploy-github-pages:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -62,3 +62,51 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  deploy-aliyun-oss:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Setup 404.html for SPA routing
+        run: |
+          if [ -f dist/index.html ]; then
+            cp dist/index.html dist/404.html
+            echo "404.html created successfully"
+          else
+            echo "Error: dist/index.html not found"
+            exit 1
+          fi
+
+      - name: Configure ossutil
+        run: |
+          wget http://gosspublic.alicdn.com/ossutil/1.7.14/ossutil64
+          chmod +x ossutil64
+          sudo mv ossutil64 /usr/local/bin/ossutil
+
+      - name: Configure ossutil credentials
+        run: |
+          ossutil config -e ${{ secrets.ALIYUN_OSS_ENDPOINT }} \
+            -i ${{ secrets.ALIYUN_ACCESS_KEY_ID }} \
+            -k ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }} \
+            -L CH \
+            --loglevel=warn
+
+      - name: Deploy to Aliyun OSS
+        run: |
+          ossutil cp -r dist/ oss://${{ secrets.ALIYUN_OSS_BUCKET }}/ --update --force
+          echo "✅ Deployment to Aliyun OSS completed successfully"

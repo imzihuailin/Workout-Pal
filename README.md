@@ -8,15 +8,15 @@ src="https://github.com/user-attachments/assets/9be06974-4821-4b06-905e-e15c1b28
 
 ## 🌐 在线访问
 
-**立即使用**: [https://你的用户名.github.io/Workout-Pal](https://你的用户名.github.io/Workout-Pal)
+**主域名（推荐，国内访问更快）**: [https://workoutpal.fit](https://workoutpal.fit)
 
-> 注意：请将链接中的"你的用户名"替换为你的 GitHub 用户名
+**GitHub Pages**: [https://imzihuailin.github.io/Workout-Pal](https://imzihuailin.github.io/Workout-Pal)
 
 - ✅ 无需注册，打开即用
 - ✅ 支持移动端访问
 - ✅ 数据本地存储，保护隐私
 - ✅ 界面简洁，操作直观
-- ✅ 国内可访问（GitHub Pages）
+- ✅ 国内可访问（阿里云 CDN 加速）
 
 ## ✨ 功能特性
 
@@ -69,25 +69,27 @@ npm run build
 
 ### 部署
 
-本项目已配置为使用 GitHub Pages 自动部署。
+本项目已配置为**双平台自动部署**：
+- **GitHub Pages**：自动部署到 GitHub Pages（保留原有功能）
+- **阿里云 OSS + CDN**：自动部署到阿里云，通过 CDN 加速，国内访问更快
 
-**部署步骤：**
+**自动部署流程：**
 
-1. **启用 GitHub Pages**
-   - 在 GitHub 仓库中，进入 `Settings` → `Pages`
-   - 在 `Source` 部分，选择 `GitHub Actions` 作为部署源
+1. **推送代码到 `master` 分支**
+   - GitHub Actions 会自动触发构建和部署
+   - 同时部署到 GitHub Pages 和阿里云 OSS
 
-2. **推送代码**
-   - 将代码推送到 `master` 分支
-   - GitHub Actions 会自动构建并部署到 GitHub Pages
+2. **访问网站**
+   - 主域名：`https://workoutpal.fit`（阿里云 CDN，国内访问更快）
+   - GitHub Pages：`https://你的用户名.github.io/Workout-Pal`
 
-3. **访问网站**
-   - 部署完成后，访问：`https://你的用户名.github.io/Workout-Pal`
-   - 首次部署可能需要几分钟时间
+**首次配置阿里云部署：**
+
+如果你是第一次配置阿里云部署，请按照 [DEPLOY_ALIYUN.md](./DEPLOY_ALIYUN.md) 中的详细步骤进行配置。
 
 **部署配置：**
 - 构建命令：`npm run build`
 - 输出目录：`dist`
-- 基础路径：`/Workout-Pal/`
+- 基础路径：`/`（根路径）
 - 自动部署：推送到 `master` 分支时自动触发
 - 工作流文件：`.github/workflows/deploy.yml`

@@ -28,8 +28,8 @@ export default defineConfig({
       },
     },
   },
-  // 确保资源路径正确（对于部署到子路径时有用）
-  base: '/Workout-Pal/',
+  // 确保资源路径正确（根路径部署）
+  base: '/',
 })
 
 
