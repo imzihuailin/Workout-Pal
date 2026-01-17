@@ -28,8 +28,10 @@ export default defineConfig({
       },
     },
   },
-  // 确保资源路径正确（根路径部署）
-  base: '/',
+  // 根据环境变量设置 base 路径
+  // 如果设置了 VITE_BASE_PATH 环境变量，使用该值；否则根据部署目标设置
+  // GitHub Pages 使用 /Workout-Pal/，阿里云 OSS 使用 /
+  base: process.env.VITE_BASE_PATH || (process.env.DEPLOY_TARGET === 'oss' ? '/' : '/Workout-Pal/'),
 })
 
 
