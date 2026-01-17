@@ -82,31 +82,97 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Verify build files
+        run: |
+          if [ ! -d dist ]; then
+            echo "❌ Error: dist directory not found"
+            exit 1
+          fi
+          if [ ! -f dist/index.html ]; then
+            echo "❌ Error: dist/index.html not found"
+            exit 1
+          fi
+          echo "✅ Build files verified"
+          ls -la dist/ | head -20
+
       - name: Setup 404.html for SPA routing
         run: |
           if [ -f dist/index.html ]; then
             cp dist/index.html dist/404.html
-            echo "404.html created successfully"
+            echo "✅ 404.html created successfully"
           else
-            echo "Error: dist/index.html not found"
+            echo "❌ Error: dist/index.html not found"
             exit 1
           fi
 
-      - name: Configure ossutil
+      - name: Check required secrets
         run: |
-          wget http://gosspublic.alicdn.com/ossutil/1.7.14/ossutil64
+          if [ -z "${{ secrets.ALIYUN_OSS_ENDPOINT }}" ]; then
+            echo "❌ Error: ALIYUN_OSS_ENDPOINT secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.ALIYUN_ACCESS_KEY_ID }}" ]; then
+            echo "❌ Error: ALIYUN_ACCESS_KEY_ID secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}" ]; then
+            echo "❌ Error: ALIYUN_ACCESS_KEY_SECRET secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.ALIYUN_OSS_BUCKET }}" ]; then
+            echo "❌ Error: ALIYUN_OSS_BUCKET secret is not set"
+            exit 1
+          fi
+          echo "✅ All required secrets are set"
+
+      - name: Download and configure ossutil
+        run: |
+          echo "📥 Downloading ossutil..."
+          wget -q http://gosspublic.alicdn.com/ossutil/1.7.14/ossutil64 || {
+            echo "❌ Failed to download ossutil"
+            exit 1
+          }
           chmod +x ossutil64
           sudo mv ossutil64 /usr/local/bin/ossutil
+          ossutil --version || {
+            echo "❌ Failed to install ossutil"
+            exit 1
+          }
+          echo "✅ ossutil installed successfully"
 
       - name: Configure ossutil credentials
         run: |
+          echo "🔐 Configuring ossutil credentials..."
           ossutil config -e ${{ secrets.ALIYUN_OSS_ENDPOINT }} \
             -i ${{ secrets.ALIYUN_ACCESS_KEY_ID }} \
             -k ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }} \
             -L CH \
-            --loglevel=warn
+            --loglevel=warn || {
+            echo "❌ Failed to configure ossutil credentials"
+            exit 1
+          }
+          echo "✅ ossutil credentials configured"
+
+      - name: Test OSS connection
+        run: |
+          echo "🔍 Testing OSS connection..."
+          ossutil ls oss://${{ secrets.ALIYUN_OSS_BUCKET }}/ --loglevel=warn || {
+            echo "❌ Failed to connect to OSS bucket. Please check:"
+            echo "   - Bucket name: ${{ secrets.ALIYUN_OSS_BUCKET }}"
+            echo "   - Endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}"
+            echo "   - AccessKey permissions"
+            exit 1
+          }
+          echo "✅ OSS connection test successful"
 
       - name: Deploy to Aliyun OSS
         run: |
-          ossutil cp -r dist/ oss://${{ secrets.ALIYUN_OSS_BUCKET }}/ --update --force
+          echo "🚀 Deploying to Aliyun OSS..."
+          ossutil cp -r dist/ oss://${{ secrets.ALIYUN_OSS_BUCKET }}/ \
+            --update \
+            --force \
+            --loglevel=info || {
+            echo "❌ Failed to deploy to OSS"
+            exit 1
+          }
           echo "✅ Deployment to Aliyun OSS completed successfully"
