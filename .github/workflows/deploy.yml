@@ -123,7 +123,20 @@ jobs:
             echo "❌ Error: ALIYUN_OSS_BUCKET secret is not set"
             exit 1
           fi
-          echo "✅ All required secrets are set"
+          
+          # 验证存储桶名称格式
+          BUCKET_NAME="${{ secrets.ALIYUN_OSS_BUCKET }}"
+          if echo "$BUCKET_NAME" | grep -qE '^[a-z0-9-]+$'; then
+            echo "✅ Bucket name format is valid"
+          else
+            echo "❌ Error: Invalid bucket name format: ${BUCKET_NAME}"
+            echo ""
+            echo "OSS bucket names can only include lowercase letters, numbers, and hyphens."
+            echo "Please check your GitHub Secret 'ALIYUN_OSS_BUCKET'."
+            exit 1
+          fi
+          
+          echo "✅ All required secrets are set and valid"
 
       - name: Download and configure ossutil
         run: |
@@ -170,6 +183,24 @@ jobs:
           
           if [ -z "$BUCKET_NAME" ]; then
             echo "❌ Error: ALIYUN_OSS_BUCKET secret is empty"
+            exit 1
+          fi
+          
+          # 验证存储桶名称格式（只能包含小写字母、数字和连字符）
+          if echo "$BUCKET_NAME" | grep -qE '^[a-z0-9-]+$'; then
+            echo "✅ Bucket name format is valid: ${BUCKET_NAME}"
+          else
+            echo "❌ Error: Invalid bucket name format: ${BUCKET_NAME}"
+            echo ""
+            echo "OSS bucket names can only include:"
+            echo "  - Lowercase letters (a-z)"
+            echo "  - Numbers (0-9)"
+            echo "  - Hyphens (-)"
+            echo ""
+            echo "Please check your GitHub Secret 'ALIYUN_OSS_BUCKET' and ensure:"
+            echo "  1. The bucket name contains only allowed characters"
+            echo "  2. The bucket name matches exactly what you see in Aliyun OSS console"
+            echo "  3. There are no uppercase letters, underscores, or other special characters"
             exit 1
           fi
           
