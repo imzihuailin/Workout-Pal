@@ -146,8 +146,7 @@ jobs:
           ossutil config -e ${{ secrets.ALIYUN_OSS_ENDPOINT }} \
             -i ${{ secrets.ALIYUN_ACCESS_KEY_ID }} \
             -k ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }} \
-            -L CH \
-            --loglevel=warn || {
+            -L CH || {
             echo "❌ Failed to configure ossutil credentials"
             exit 1
           }
@@ -156,7 +155,7 @@ jobs:
       - name: Test OSS connection
         run: |
           echo "🔍 Testing OSS connection..."
-          ossutil ls oss://${{ secrets.ALIYUN_OSS_BUCKET }}/ --loglevel=warn || {
+          ossutil ls oss://${{ secrets.ALIYUN_OSS_BUCKET }}/ --loglevel=info || {
             echo "❌ Failed to connect to OSS bucket. Please check:"
             echo "   - Bucket name: ${{ secrets.ALIYUN_OSS_BUCKET }}"
             echo "   - Endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}"
