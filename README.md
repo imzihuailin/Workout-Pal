@@ -16,7 +16,7 @@ src="https://github.com/user-attachments/assets/9be06974-4821-4b06-905e-e15c1b28
 - ✅ 支持移动端访问
 - ✅ 数据本地存储，保护隐私
 - ✅ 界面简洁，操作直观
-- ✅ 国内可访问（阿里云 CDN 加速）
+- ✅ 国内可访问（阿里云 OSS）
 
 ## ✨ 功能特性
 
@@ -71,7 +71,7 @@ npm run build
 
 本项目已配置为**双平台自动部署**：
 - **GitHub Pages**：自动部署到 GitHub Pages（保留原有功能）
-- **阿里云 OSS + CDN**：自动部署到阿里云，通过 CDN 加速，国内访问更快
+- **阿里云 OSS**：自动部署到阿里云 OSS，国内访问更快
 
 **自动部署流程：**
 
@@ -80,7 +80,7 @@ npm run build
    - 同时部署到 GitHub Pages 和阿里云 OSS
 
 2. **访问网站**
-   - 主域名：`https://workoutpal.fit`（阿里云 CDN，国内访问更快）
+   - 主域名：`https://workoutpal.fit`（阿里云 OSS，国内访问更快）
    - GitHub Pages：`https://你的用户名.github.io/Workout-Pal`
 
 **首次配置阿里云部署：**
