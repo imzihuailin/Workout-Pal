@@ -8,9 +8,18 @@ src="https://github.com/user-attachments/assets/9be06974-4821-4b06-905e-e15c1b28
 
 ## 🌐 在线访问
 
-**主域名（推荐，国内访问更快）**: [https://workoutpal.fit](https://workoutpal.fit)
+**主域名（推荐）**: [https://workoutpal.fit](https://workoutpal.fit)  
+*通过 GitHub Pages + 自定义域名，无需备案即可使用*
 
 **GitHub Pages**: [https://imzihuailin.github.io/Workout-Pal](https://imzihuailin.github.io/Workout-Pal)
+
+**阿里云 OSS（国内访问更快）**: 
+- 如果域名已备案，可通过自定义域名访问：`https://workoutpal.fit`
+- 如果域名未备案，可使用 OSS 默认域名访问（格式：`https://你的存储桶名.地域.aliyuncs.com`）
+  - 例如：`https://workoutpal-fit.oss-cn-hangzhou.aliyuncs.com`
+  - 在 OSS 控制台的存储桶概览页面可以找到默认域名
+
+> 💡 **提示**：域名 `workoutpal.fit` 可以立即用于 GitHub Pages（无需备案），详见 [USE_DOMAIN_ON_GITHUB_PAGES.md](./USE_DOMAIN_ON_GITHUB_PAGES.md)
 
 - ✅ 无需注册，打开即用
 - ✅ 支持移动端访问

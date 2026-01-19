@@ -1,36 +1,20 @@
-import { useState } from 'react'
-
 function PlanList({ plans, onAddPlan, onPlanClick }) {
-  const [planName, setPlanName] = useState('')
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (planName.trim()) {
-      onAddPlan(planName.trim())
-      setPlanName('')
-    }
+  const handleAddClick = () => {
+    onAddPlan()
   }
 
   return (
     <div>
-      {/* 添加计划表单 */}
-      <form onSubmit={handleSubmit} className="mb-6">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={planName}
-            onChange={(e) => setPlanName(e.target.value)}
-            placeholder="输入计划名称"
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            type="submit"
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            添加计划
-          </button>
-        </div>
-      </form>
+      {/* 添加计划按钮 */}
+      <div className="mb-6">
+        <button
+          type="button"
+          onClick={handleAddClick}
+          className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          添加计划
+        </button>
+      </div>
 
       {/* 计划列表 */}
       <div className="space-y-3">

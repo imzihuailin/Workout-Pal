@@ -16,7 +16,7 @@ function App() {
   }, [])
 
   // 添加新计划
-  const handleAddPlan = (name) => {
+  const handleAddPlan = (name = '新计划') => {
     const newPlan = {
       id: Date.now().toString(),
       name: name,
@@ -25,6 +25,9 @@ function App() {
     const updatedPlans = [...plans, newPlan]
     setPlans(updatedPlans)
     savePlans(updatedPlans)
+    // 创建后直接跳转到编辑页面
+    setSelectedPlanId(newPlan.id)
+    setCurrentView('detail')
   }
 
   // 查看计划（查看模式）
