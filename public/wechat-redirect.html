@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>请在浏览器中打开</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      .copy-btn {
+        transition: all 0.3s ease;
+      }
+      .copy-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      .copy-btn:active {
+        transform: translateY(0);
+      }
+      .link-input {
+        user-select: all;
+        -webkit-user-select: all;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div id="wechat-container" class="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+      <!-- 微信内显示的内容 -->
+      <div class="mb-6">
+        <svg class="w-16 h-16 mx-auto mb-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">请在浏览器中打开</h1>
+        <p class="text-gray-600 mb-6">为了获得更好的体验，请在浏览器中打开此应用</p>
+      </div>
+
+      <!-- 操作步骤 -->
+      <div class="bg-blue-50 rounded-lg p-4 mb-6 text-left">
+        <p class="text-gray-700 font-medium mb-2">操作步骤：</p>
+        <ol class="list-decimal list-inside space-y-2 text-gray-600 text-sm">
+          <li>点击右上角 <span class="font-semibold text-blue-600">"..."</span> 菜单</li>
+          <li>选择 <span class="font-semibold text-blue-600">"在浏览器中打开"</span></li>
+          <li>即可正常使用应用</li>
+        </ol>
+      </div>
+
+      <!-- 链接复制区域 -->
+      <div class="mb-6">
+        <p class="text-sm text-gray-600 mb-2">或者复制以下链接到浏览器打开：</p>
+        <div class="flex items-center gap-2 bg-gray-100 rounded-lg p-3">
+          <input 
+            type="text" 
+            id="app-link" 
+            readonly 
+            value="https://imzihuailin.github.io/Workout-Pal" 
+            class="flex-1 bg-transparent text-sm text-gray-700 link-input focus:outline-none"
+          />
+          <button 
+            id="copy-btn" 
+            class="copy-btn bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap"
+          >
+            复制
+          </button>
+        </div>
+        <p id="copy-success" class="text-green-500 text-sm mt-2 hidden">✓ 链接已复制到剪贴板</p>
+      </div>
+
+      <!-- 直接打开按钮（尝试在外部浏览器打开） -->
+      <a 
+        href="https://imzihuailin.github.io/Workout-Pal" 
+        class="block w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+        target="_blank"
+      >
+        在浏览器中打开
+      </a>
+    </div>
+
+    <script>
+      // 检测是否在微信内
+      function isWeChat() {
+        const ua = navigator.userAgent.toLowerCase();
+        return ua.indexOf('micromessenger') !== -1;
+      }
+
+      // 复制链接功能
+      const copyBtn = document.getElementById('copy-btn');
+      const appLink = document.getElementById('app-link');
+      const copySuccess = document.getElementById('copy-success');
+
+      copyBtn.addEventListener('click', async () => {
+        try {
+          // 选择输入框内容
+          appLink.select();
+          appLink.setSelectionRange(0, 99999); // 移动端兼容
+
+          // 尝试使用 Clipboard API
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(appLink.value);
+          } else {
+            // 降级方案：使用 execCommand
+            document.execCommand('copy');
+          }
+
+          // 显示成功提示
+          copySuccess.classList.remove('hidden');
+          copyBtn.textContent = '已复制';
+          copyBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+          copyBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+
+          // 3秒后恢复
+          setTimeout(() => {
+            copySuccess.classList.add('hidden');
+            copyBtn.textContent = '复制';
+            copyBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+            copyBtn.classList.add('bg-blue-500', 'hover:bg-blue-600');
+          }, 3000);
+        } catch (err) {
+          console.error('复制失败:', err);
+          alert('复制失败，请手动选择并复制链接');
+        }
+      });
+
+      // 如果不在微信内，自动跳转
+      if (!isWeChat()) {
+        // 延迟一下，让用户看到页面
+        setTimeout(() => {
+          window.location.href = 'https://imzihuailin.github.io/Workout-Pal';
+        }, 1000);
+        
+        // 更新页面内容
+        document.getElementById('wechat-container').innerHTML = `
+          <div class="text-center">
+            <div class="mb-4">
+              <svg class="w-16 h-16 mx-auto mb-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <h1 class="text-2xl font-bold text-gray-900 mb-2">正在跳转...</h1>
+              <p class="text-gray-600">检测到您已在浏览器中，正在跳转到应用</p>
+            </div>
+            <a 
+              href="https://imzihuailin.github.io/Workout-Pal" 
+              class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+            >
+              立即访问
+            </a>
+          </div>
+        `;
+      }
+    </script>
+  </body>
+</html>
