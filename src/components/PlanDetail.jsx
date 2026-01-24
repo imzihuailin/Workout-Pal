@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 
-function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan }) {
+function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan, onDeleteExercise }) {
   const [planName, setPlanName] = useState(plan.name)
   const [originalPlanName, setOriginalPlanName] = useState(plan.name)
   const [exerciseName, setExerciseName] = useState('')
@@ -8,6 +8,7 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan }) {
   const [reps, setReps] = useState('')
   const [weight, setWeight] = useState('')
   const [rpe, setRpe] = useState('')
+  const [duration, setDuration] = useState('')
   const [editingExerciseId, setEditingExerciseId] = useState(null)
 
   // 当plan变化时更新planName和originalPlanName（仅在切换不同计划时重置）
@@ -52,6 +53,7 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan }) {
   const repsRef = useRef(null)
   const weightRef = useRef(null)
   const rpeRef = useRef(null)
+  const durationRef = useRef(null)
 
   // 清除表单
   const clearForm = () => {
@@ -60,6 +62,7 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan }) {
     setReps('')
     setWeight('')
     setRpe('')
+    setDuration('')
     setEditingExerciseId(null)
   }
 
@@ -70,6 +73,7 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan }) {
     setReps(exercise.reps !== '-' ? exercise.reps : '')
     setWeight(exercise.weight !== '-' ? exercise.weight : '')
     setRpe(exercise.rpe !== '-' ? exercise.rpe : '')
+    setDuration(exercise.duration !== '-' ? exercise.duration : '')
     setEditingExerciseId(exercise.id)
     // 聚焦到第一个输入框
     setTimeout(() => nameRef.current?.focus(), 0)
@@ -83,7 +87,8 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan }) {
         sets: sets.trim() || '-',
         reps: reps.trim() || '-',
         weight: weight.trim() || '-',
-        rpe: rpe.trim() || '-'
+        rpe: rpe.trim() || '-',
+        duration: duration.trim() || '-'
       }
 
       let updatedPlan
@@ -114,17 +119,35 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan }) {
     }
   }
 
-  const handleDeleteExercise = (e, exerciseId) => {
+  const handleDeleteExercise = (e, exerciseId, index) => {
     e.stopPropagation() // 阻止事件冒泡，避免触发编辑
-    const updatedPlan = {
-      ...plan,
-      exercises: plan.exercises.filter(ex => ex.id !== exerciseId)
-    }
-    onUpdatePlan(updatedPlan)
+    onDeleteExercise(plan.id, exerciseId, index)
     // 如果删除的是正在编辑的动作，清除表单
     if (exerciseId === editingExerciseId) {
       clearForm()
     }
+  }
+
+  // 上移动作
+  const handleMoveUp = (e, index) => {
+    e.stopPropagation()
+    if (index === 0) return
+    const newExercises = [...plan.exercises]
+    const temp = newExercises[index]
+    newExercises[index] = newExercises[index - 1]
+    newExercises[index - 1] = temp
+    onUpdatePlan({ ...plan, exercises: newExercises })
+  }
+
+  // 下移动作
+  const handleMoveDown = (e, index) => {
+    e.stopPropagation()
+    if (index === plan.exercises.length - 1) return
+    const newExercises = [...plan.exercises]
+    const temp = newExercises[index]
+    newExercises[index] = newExercises[index + 1]
+    newExercises[index + 1] = temp
+    onUpdatePlan({ ...plan, exercises: newExercises })
   }
 
   // 处理回车键，跳转到下一个输入框
@@ -140,6 +163,8 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan }) {
       } else if (currentField === 'weight') {
         rpeRef.current?.focus()
       } else if (currentField === 'rpe') {
+        durationRef.current?.focus()
+      } else if (currentField === 'duration') {
         // 最后一个输入框，执行提交
         handleSubmit(e)
       }
@@ -186,7 +211,7 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan }) {
 
       {/* 添加动作表单 */}
       <form onSubmit={handleSubmit} className="mb-8 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-3">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-3 mb-3">
           <input
             ref={nameRef}
             type="text"
@@ -233,6 +258,15 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan }) {
             placeholder="RPE"
             className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <input
+            ref={durationRef}
+            type="text"
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
+            onKeyDown={(e) => handleKeyDown(e, 'duration')}
+            placeholder="时间"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
         <div className="flex gap-2">
           {editingExerciseId && (
@@ -260,7 +294,7 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan }) {
             还没有动作，添加一个吧！
           </div>
         ) : (
-          plan.exercises.map((exercise) => (
+          plan.exercises.map((exercise, index) => (
             <div
               key={exercise.id}
               onClick={() => handleEditExercise(exercise)}
@@ -277,14 +311,33 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan }) {
                   <div>次数: {exercise.reps}</div>
                   <div>重量: {exercise.weight} kg</div>
                   <div>RPE: {exercise.rpe}</div>
+                  <div>时间: {exercise.duration || '-'}</div>
                 </div>
               </div>
-              <button
-                onClick={(e) => handleDeleteExercise(e, exercise.id)}
-                className="ml-4 px-3 py-1 text-red-500 hover:text-red-600 hover:bg-red-50 rounded"
-              >
-                删除
-              </button>
+              <div className="ml-4 flex flex-col gap-1">
+                {index > 0 && (
+                  <button
+                    onClick={(e) => handleMoveUp(e, index)}
+                    className="px-3 py-1 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"
+                  >
+                    ↑
+                  </button>
+                )}
+                {index < plan.exercises.length - 1 && (
+                  <button
+                    onClick={(e) => handleMoveDown(e, index)}
+                    className="px-3 py-1 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"
+                  >
+                    ↓
+                  </button>
+                )}
+                <button
+                  onClick={(e) => handleDeleteExercise(e, exercise.id, index)}
+                  className="px-3 py-1 text-red-500 hover:text-red-600 hover:bg-red-50 rounded"
+                >
+                  删除
+                </button>
+              </div>
             </div>
           ))
         )}
