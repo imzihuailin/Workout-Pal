@@ -80,7 +80,7 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan, onDeleteExercise
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e?.preventDefault?.()
     if (exerciseName.trim()) {
       const exerciseData = {
         name: exerciseName.trim(),
@@ -280,6 +280,10 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan, onDeleteExercise
           )}
           <button
             type="submit"
+            onClick={(e) => {
+              e.preventDefault()
+              handleSubmit(e)
+            }}
             className={`${editingExerciseId ? 'flex-1' : 'w-full'} px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500`}
           >
             {editingExerciseId ? '保存修改' : '添加动作'}
