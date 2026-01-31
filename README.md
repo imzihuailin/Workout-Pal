@@ -2,9 +2,12 @@
 
 一个简洁、易用的健身计划管理应用，帮你轻松创建和管理个人健身计划。免费无广告，无需注册，数据本地存储，打开即用。
 
-<img
-src="https://github.com/user-attachments/assets/9be06974-4821-4b06-905e-e15c1b28ab4b" width="300" />
-
+<p>
+  <img src="screenshots/screenshot-1.png" width="24%" />
+  <img src="screenshots/screenshot-2.png" width="24%" />
+  <img src="screenshots/screenshot-3.png" width="24%" />
+  <img src="screenshots/screenshot-4.png" width="24%" />
+</p>
 
 ## 🌐 在线访问
 
