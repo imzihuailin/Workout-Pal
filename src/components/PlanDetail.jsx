@@ -129,6 +129,10 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan, onDeleteExercise
     }
   }
 
+  const handleSaveClick = (e) => {
+    handleSubmit(e)
+  }
+
   const handleDeleteExercise = (e, exerciseId, index) => {
     e.stopPropagation() // 阻止事件冒泡，避免触发编辑
     onDeleteExercise(plan.id, exerciseId, index)
@@ -290,6 +294,7 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan, onDeleteExercise
           )}
           <button
             type="submit"
+            onClick={handleSaveClick}
             className={`${editingExerciseId ? 'flex-1' : 'w-full'} px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500`}
           >
             {editingExerciseId ? '保存修改' : '添加动作'}
