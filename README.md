@@ -1,6 +1,6 @@
 # 健身计划APP 💪
 
-一个简洁、易用的健身计划管理应用，帮你轻松创建和管理个人健身计划。无需注册，数据本地存储，打开即用。
+一个简洁、易用的健身计划管理应用，帮你轻松创建和管理个人健身计划。免费无广告，无需注册，数据本地存储，打开即用。
 
 <img
 src="https://github.com/user-attachments/assets/9be06974-4821-4b06-905e-e15c1b28ab4b" width="300" />
@@ -11,10 +11,8 @@ src="https://github.com/user-attachments/assets/9be06974-4821-4b06-905e-e15c1b28
 **GitHub Pages**: [https://imzihuailin.github.io/Workout-Pal](https://imzihuailin.github.io/Workout-Pal)
 
 - ✅ 无需注册，打开即用
-- ✅ 支持移动端访问
-- ✅ 数据本地存储，保护隐私
-- ✅ 界面简洁，操作直观
-- ✅ 国内可访问
+- ✅ 数据本地存储
+- ✅ 免费无广告
 
 ## ✨ 功能特性
 
@@ -22,7 +20,6 @@ src="https://github.com/user-attachments/assets/9be06974-4821-4b06-905e-e15c1b28
 - **动作记录** - 为每个计划添加动作，记录组数、次数、重量、RPE
 - **查看与编辑** - 查看模式清晰展示计划，编辑模式快速修改
 - **本地存储** - 数据保存在浏览器本地，无需云端同步
-- **简洁界面** - 清爽的界面设计，专注内容本身
 
 ## 📖 如何使用
 
