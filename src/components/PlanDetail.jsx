@@ -11,6 +11,16 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan, onDeleteExercise
   const [duration, setDuration] = useState('')
   const [editingExerciseId, setEditingExerciseId] = useState(null)
 
+  const normalizeField = (value) => {
+    if (value === '-' || value === null || value === undefined) return ''
+    return String(value)
+  }
+
+  const trimOrDash = (value) => {
+    const trimmed = normalizeField(value).trim()
+    return trimmed || '-'
+  }
+
   // 当plan变化时更新planName和originalPlanName（仅在切换不同计划时重置）
   useEffect(() => {
     setPlanName(plan.name)
@@ -68,27 +78,27 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan, onDeleteExercise
 
   // 编辑动作：将动作信息填入表单
   const handleEditExercise = (exercise) => {
-    setExerciseName(exercise.name)
-    setSets(exercise.sets !== '-' ? exercise.sets : '')
-    setReps(exercise.reps !== '-' ? exercise.reps : '')
-    setWeight(exercise.weight !== '-' ? exercise.weight : '')
-    setRpe(exercise.rpe !== '-' ? exercise.rpe : '')
-    setDuration(exercise.duration !== '-' ? exercise.duration : '')
+    setExerciseName(normalizeField(exercise.name))
+    setSets(normalizeField(exercise.sets))
+    setReps(normalizeField(exercise.reps))
+    setWeight(normalizeField(exercise.weight))
+    setRpe(normalizeField(exercise.rpe))
+    setDuration(normalizeField(exercise.duration))
     setEditingExerciseId(exercise.id)
     // 聚焦到第一个输入框
     setTimeout(() => nameRef.current?.focus(), 0)
   }
 
   const handleSubmit = (e) => {
-    e?.preventDefault?.()
+    e.preventDefault()
     if (exerciseName.trim()) {
       const exerciseData = {
-        name: exerciseName.trim(),
-        sets: sets.trim() || '-',
-        reps: reps.trim() || '-',
-        weight: weight.trim() || '-',
-        rpe: rpe.trim() || '-',
-        duration: duration.trim() || '-'
+        name: trimOrDash(exerciseName),
+        sets: trimOrDash(sets),
+        reps: trimOrDash(reps),
+        weight: trimOrDash(weight),
+        rpe: trimOrDash(rpe),
+        duration: trimOrDash(duration)
       }
 
       let updatedPlan
@@ -280,10 +290,6 @@ function PlanDetail({ plan, onUpdatePlan, onBack, onDeletePlan, onDeleteExercise
           )}
           <button
             type="submit"
-            onClick={(e) => {
-              e.preventDefault()
-              handleSubmit(e)
-            }}
             className={`${editingExerciseId ? 'flex-1' : 'w-full'} px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500`}
           >
             {editingExerciseId ? '保存修改' : '添加动作'}
