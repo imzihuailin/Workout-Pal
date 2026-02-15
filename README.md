@@ -1,7 +1,6 @@
-# 健身计划APP 💪
+# Workoutpal 
 
-一个简洁、易用的健身计划管理应用，帮你轻松创建和管理个人健身计划。免费无广告，无需注册，数据本地存储，打开即用。
-
+免费、简洁、即开即用。一个保存训练计划的工具。
 <p>
   <img src="screenshots/screenshot-1.png" width="24%" />
   <img src="screenshots/screenshot-2.png" width="24%" />
